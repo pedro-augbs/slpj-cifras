@@ -1,12 +1,13 @@
 {
-	"name": "web",
+	"name": "slpj-cifras",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"biome": "biome check --write ."
+		"biome": "biome check --write .",
+		"test": "jest"
 	},
 	"dependencies": {
 		"@radix-ui/react-dialog": "^1.1.1",
@@ -24,17 +25,25 @@
 		"react": "19.0.0-rc-ee1a403a-20240916",
 		"react-dom": "19.0.0-rc-ee1a403a-20240916",
 		"tailwind-merge": "^2.5.2",
-		"tailwindcss-animate": "^1.0.7"
+		"tailwindcss-animate": "^1.0.7",
+		"zod": "^3.23.8"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.1",
+		"@testing-library/dom": "^10.4.0",
+		"@testing-library/jest-dom": "^6.5.0",
+		"@testing-library/react": "^16.0.1",
+		"@types/jest": "^29.5.13",
 		"@types/node": "^20",
 		"@types/react": "^18",
 		"@types/react-dom": "^18",
+		"jest": "^29.7.0",
+		"jest-environment-jsdom": "^29.7.0",
 		"postcss": "^8",
 		"prettier": "^3.3.3",
 		"prettier-plugin-tailwindcss": "^0.6.6",
 		"tailwindcss": "^3.4.1",
+		"ts-node": "^10.9.2",
 		"typescript": "^5"
 	}
 }

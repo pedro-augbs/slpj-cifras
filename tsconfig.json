@@ -33,7 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "src/sum.test.js", "src/tests/babel.config.js.config.js", "src/sum.js", "src/sum.test.js"  ],
   "exclude": [
     "node_modules"
   ]

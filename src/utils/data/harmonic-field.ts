@@ -1,18 +1,18 @@
-type Tonality = "major" | "minor"
+export type Tonality = "major" | "minor"
 
 interface HarmonicChord {
   [degree: string]: string
 }
 
 interface Harmonic {
-  tone: string
+  scale: string
   chords: HarmonicChord[]
 }
 
 const harmonicField: Record<Tonality, Harmonic[]> = {
   major: [
     {
-      tone: "A",
+      scale: "A",
       chords: [
         { "1": "A" },
         { "2": "Bm" },
@@ -24,7 +24,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "A#",
+      scale: "A#",
       chords: [
         { "1": "A#" },
         { "2": "Cm" },
@@ -36,7 +36,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "B",
+      scale: "B",
       chords: [
         { "1": "B" },
         { "2": "C#m" },
@@ -48,7 +48,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "C",
+      scale: "C",
       chords: [
         { "1": "C" },
         { "2": "Dm" },
@@ -60,7 +60,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "C#",
+      scale: "C#",
       chords: [
         { "1": "C#" },
         { "2": "D#m" },
@@ -72,7 +72,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "D",
+      scale: "D",
       chords: [
         { "1": "D" },
         { "2": "Em" },
@@ -84,7 +84,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "D#",
+      scale: "D#",
       chords: [
         { "1": "D#" },
         { "2": "Fm" },
@@ -96,7 +96,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "E",
+      scale: "E",
       chords: [
         { "1": "E" },
         { "2": "F#m" },
@@ -108,7 +108,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "F",
+      scale: "F",
       chords: [
         { "1": "F" },
         { "2": "Gm" },
@@ -120,7 +120,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "F#",
+      scale: "F#",
       chords: [
         { "1": "F#" },
         { "2": "G#m" },
@@ -132,7 +132,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "G",
+      scale: "G",
       chords: [
         { "1": "G" },
         { "2": "Am" },
@@ -144,7 +144,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "G#",
+      scale: "G#",
       chords: [
         { "1": "G#" },
         { "2": "A#m" },
@@ -158,7 +158,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
   ],
   minor: [
     {
-      tone: "A",
+      scale: "A",
       chords: [
         { "1": "Am" },
         { "2": "Bdim" },
@@ -170,7 +170,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "A#",
+      scale: "A#",
       chords: [
         { "1": "A#m" },
         { "2": "Cdim" },
@@ -182,7 +182,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "B",
+      scale: "B",
       chords: [
         { "1": "Bm" },
         { "2": "C#dim" },
@@ -194,7 +194,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "C",
+      scale: "C",
       chords: [
         { "1": "Cm" },
         { "2": "Ddim" },
@@ -206,7 +206,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "C#",
+      scale: "C#",
       chords: [
         { "1": "C#m" },
         { "2": "D#dim" },
@@ -218,7 +218,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "D",
+      scale: "D",
       chords: [
         { "1": "Dm" },
         { "2": "Edim" },
@@ -230,7 +230,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "D#",
+      scale: "D#",
       chords: [
         { "1": "D#m" },
         { "2": "Fdim" },
@@ -242,7 +242,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "E",
+      scale: "E",
       chords: [
         { "1": "Em" },
         { "2": "F#dim" },
@@ -254,7 +254,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "F",
+      scale: "F",
       chords: [
         { "1": "Fm" },
         { "2": "Gdim" },
@@ -266,7 +266,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "F#",
+      scale: "F#",
       chords: [
         { "1": "F#m" },
         { "2": "G#dim" },
@@ -278,7 +278,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "G",
+      scale: "G",
       chords: [
         { "1": "Gm" },
         { "2": "Adim" },
@@ -290,7 +290,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
       ],
     },
     {
-      tone: "G#",
+      scale: "G#",
       chords: [
         { "1": "G#m" },
         { "2": "A#dim" },
@@ -306,7 +306,7 @@ const harmonicField: Record<Tonality, Harmonic[]> = {
 
 export function getHarmonicField(
   tonality: Tonality,
-  tone: string,
+  scale: string,
 ): Harmonic | undefined {
-  return harmonicField[tonality].find(field => field.tone === tone)
+  return harmonicField[tonality].find(field => field.scale === scale)
 }
