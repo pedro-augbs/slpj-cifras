@@ -37,8 +37,6 @@ export function AddMusicForm() {
       ...Object.fromEntries(data.entries()),
     }
 
-    console.log(fullData)
-
     action(fullData)
   }
 
