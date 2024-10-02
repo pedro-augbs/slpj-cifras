@@ -1,8 +1,11 @@
 import type { Metadata } from "next"
 import { Roboto_Flex as Roboto } from "next/font/google"
 
-import "./globals.css"
 import { ThemeProvider } from "@/providers/theme-provider"
+
+import { Toaster } from "@/components/ui/sonner"
+
+import "./globals.css"
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -20,8 +23,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="pt-BR">
-      <body className={`${roboto.variable} antialiased min-h-screen`}>
+    <html
+      lang="pt-BR"
+      className={`${roboto.variable} antialiased`}
+      suppressHydrationWarning
+    >
+      <body className="min-h-screen">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -29,6 +36,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster richColors />
         </ThemeProvider>
       </body>
     </html>

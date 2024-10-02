@@ -1,68 +1,83 @@
-import { ModeToggle } from "@/components/mode-toggle"
-import { getHarmonicField } from "@/utils/data/harmonic-field"
-import { replaceNumbersWithChords } from "@/utils/functions/replaceNumbersWithChords"
-// import { useEffect, useState } from "react"
+"use client"
+
+import { useEffect, useState } from "react"
+import { Search } from "lucide-react"
+
+import { getAllMusics } from "@/api/get-all-musics"
+
+import { CardSkeleton } from "@/components/skeletons/card-skeleton"
+
+import { Card } from "@/components/card"
+import { ConfigButton } from "@/components/config-button"
+
+import { Input } from "@/components/ui/input"
 
 export default function Home() {
-  // const [response, setResponse] = useState("")
+  const [data, setData] = useState<Music[]>([])
+  const [search, setSearch] = useState("")
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = await fetch("/api/get-harmonic-field")
-  //     const data = await response.json()
-  //     setResponse(data.message)
-  //   }
-  //   fetchData()
-  // }, [])
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getAllMusics()
+      setData(data.musics)
+    }
+    fetchData()
+  }, [])
 
-  const text = `
-[Santo]
-
-[1]
-Do barro me criou
-[5]
-Soprastes tua vida em mim
-[1]
-Da água viva tu me deu
-[5]
-E no fogo refinou o meu ser
-
-[6]
-Para adorar tu me criou
-[1]                            [5]          [4]
-Esse é o meu amor, prazer, Senhor
-[6]
-Ergo minha voz a ti
-[1]                        [5]
-E com os anjos dizer
-[4]
-Quem tu és
-
-[1]
-Santo! Todo céu adora a ti
-[5]                [4]
-Santo! Que era, é e há de vir
-[1]
-Santo! Grandioso Deus, igual não há
-[5]          [4]
-Santo! Yeshua, Yeshua
-
-[1]
-Reunidos já estamos
-A tua igreja te espera
-[5]
-Sopra teu vento impetuoso
-[4]
-Queremos ver o céu na terra
-`
-
-  const replacedText = replaceNumbersWithChords(text, "major", "C")
+  const filteredData = data.filter(music => {
+    return (
+      music.name
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .includes(
+          search
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim(),
+        ) ||
+      music.letter
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .includes(
+          search
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim(),
+        )
+    )
+  })
 
   return (
     <>
-      <ModeToggle />
-      <div className="flex flex-col justify-centers p-4">{text}</div>
-      <div>{replacedText}</div>
+      <header className="flex items-center justify-center py-4 px-4">
+        <div className="flex items-center relative gap-2 w-full max-w-md">
+          <Search className="absolute left-2" />
+          <Input
+            type="search"
+            placeholder="Search"
+            className="pl-10"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+        </div>
+      </header>
+      <div className="flex flex-wrap justify-center gap-4 px-4 py-2">
+        {filteredData.map(music => {
+          return (
+            <Card
+              key={music.id}
+              name={music.name}
+              bpm={music.bpm}
+              slug={music.slug}
+            />
+          )
+        })}
+      </div>
+      <ConfigButton />
     </>
   )
 }
