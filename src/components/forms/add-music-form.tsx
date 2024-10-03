@@ -43,7 +43,7 @@ export function AddMusicForm() {
   if (result?.success) {
     reset()
     toast.success(result.message)
-    redirect("")
+    redirect("/")
   }
 
   function handleSelect(field: string, selectedValue: string) {
