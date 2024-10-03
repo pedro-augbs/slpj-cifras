@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState, useState } from "react"
+import { useActionState, useEffect, useState } from "react"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { ChevronLeft } from "lucide-react"
@@ -40,11 +40,13 @@ export function AddMusicForm() {
     action(fullData)
   }
 
-  if (result?.success) {
-    reset()
-    toast.success(result.message)
-    redirect("/")
-  }
+  useEffect(() => {
+    if (result?.success) {
+      reset()
+      toast.success(result.message)
+      redirect("/")
+    }
+  }, [result, reset])
 
   function handleSelect(field: string, selectedValue: string) {
     saveInput({ [field]: selectedValue })
