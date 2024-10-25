@@ -7,6 +7,10 @@ import { env } from "@/utils/env"
 const secret = env.JWT_PASS
 
 export default async function middleware(req: NextRequest) {
+  if (process.env.NODE_ENV === "production" && !req.url.includes("/_next")) {
+    return NextResponse.next()
+  }
+
   const token = await getToken({ req, secret })
 
   if (!token) {
