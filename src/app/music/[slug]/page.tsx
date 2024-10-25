@@ -115,7 +115,13 @@ export default function Music() {
         />
         {isAdmin && (
           <div className="absolute top-4 right-4 space-x-2">
-            <Button size={"icon"} className="p-2 size-fit" onClick={() => {}}>
+            <Button
+              size={"icon"}
+              className="p-2 size-fit"
+              onClick={() => {
+                redirect(`/music/${slug}/edit`)
+              }}
+            >
               <Pen size={28} />
             </Button>
             <Button
