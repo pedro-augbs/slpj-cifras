@@ -1,12 +1,11 @@
 import axios from "axios"
 
-const baseURL =
-  typeof window !== "undefined"
-    ? window.location.origin // Executa no cliente
-    : "http://localhost:3000"
+import { env } from "@/utils/env"
 
-console.log(baseURL)
 export const api = axios.create({
-  baseURL,
+  baseURL:
+    process.env.NODE_ENV === "production"
+      ? env.API_URL
+      : "http://localhost:3000",
   withCredentials: true,
 })
