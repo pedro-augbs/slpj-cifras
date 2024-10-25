@@ -1,17 +1,19 @@
 "use client"
 
-import { useActionState, useEffect, useState } from "react"
+import { ChevronLeft } from "lucide-react"
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import { ChevronLeft } from "lucide-react"
+import { useActionState, useEffect, useState } from "react"
 import { toast } from "sonner"
 
 import { useMusicStore } from "@/store/music-store"
 
-import { notas } from "@/utils/functions/music-functions"
+import { notes } from "@/utils/functions/music-functions"
 
 import { addMusicAction } from "@/actions/add-music-action"
 
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
@@ -19,9 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
 
 export function AddMusicForm() {
   const { music, saveInput, reset } = useMusicStore()
@@ -32,12 +32,18 @@ export function AddMusicForm() {
   const [result, action, isPending] = useActionState(addMusicAction, null)
 
   function handleSubmit(data: FormData) {
-    const fullData = {
+    const objectData = Object.fromEntries(data.entries())
+
+    const keyWithTone =
+      objectData.tone === "minor" ? `${objectData.key}m` : objectData.key
+
+    const { tone, ...musicWithoutTone } = {
       ...music,
       ...Object.fromEntries(data.entries()),
-    }
+      key: keyWithTone,
+    } as Music & { tone: "major" | "minor" }
 
-    action(fullData)
+    action(musicWithoutTone)
   }
 
   useEffect(() => {
@@ -45,6 +51,8 @@ export function AddMusicForm() {
       reset()
       toast.success(result.message)
       redirect("/")
+    } else if (result?.message) {
+      toast.error(result?.message)
     }
   }, [result, reset])
 
@@ -58,6 +66,7 @@ export function AddMusicForm() {
         <Select
           required
           defaultValue="major"
+          name="tone"
           onValueChange={value => setTone(value as "major" | "minor")}
         >
           <SelectTrigger className="min-w-80 flex-1">
@@ -78,9 +87,9 @@ export function AddMusicForm() {
             <SelectValue placeholder="Selecione o Tom" />
           </SelectTrigger>
           <SelectContent defaultValue={music.key}>
-            {notas.map(nota => (
-              <SelectItem key={nota} value={nota}>
-                {tone === "major" ? nota : `${nota}m`}
+            {notes.map(note => (
+              <SelectItem key={note} value={note}>
+                {tone === "major" ? note : `${note}m`}
               </SelectItem>
             ))}
           </SelectContent>
@@ -99,9 +108,6 @@ export function AddMusicForm() {
       <span className="text-center">
         Tenha certeza de colocar os acordes corretos!
       </span>
-      {!result?.success && (
-        <span className="text-center">{result?.message}</span>
-      )}
       <div className="flex flex-col items-center gap-2 sm:flex-row">
         <Button
           variant={"destructive"}

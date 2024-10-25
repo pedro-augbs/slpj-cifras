@@ -42,7 +42,7 @@ export const useMusicStore = create<Props>()(
         })),
     }),
     {
-      name: "slpj-cifras:store",
+      name: "cifras-sem-limites:music:store",
       storage: createJSONStorage(() => localStorage),
     },
   ),

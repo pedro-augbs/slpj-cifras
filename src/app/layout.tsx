@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { Roboto_Flex as Roboto } from "next/font/google"
 
+import { QueryProvider } from "@/providers/query-provider"
+import { SessionProvider } from "@/providers/session-provider"
 import { ThemeProvider } from "@/providers/theme-provider"
 
 import { Toaster } from "@/components/ui/sonner"
@@ -35,8 +37,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-          <Toaster richColors />
+          <SessionProvider>
+            <QueryProvider>
+              {children}
+              <Toaster richColors />
+            </QueryProvider>
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,13 +1,14 @@
 import { z } from "zod"
+
 import { addMusic } from "@/api/add-music"
 
 const schema = z.object({
-  name: z.string().min(1, "Campo não pode ser vazio!"),
+  name: z.string().min(1, "Nome não pode ser vazio!"),
   artist: z.string().optional(),
   author: z.string().optional(),
   bpm: z.coerce.number().optional(),
-  key: z.string().min(1, "Campo não pode ser vazio!"),
-  letter: z.string().min(1, "Campo não pode ser vazio!"),
+  key: z.string().min(1, "Tom não pode ser vazio!"),
+  letter: z.string().min(1, "Letra não pode ser vazio!"),
 })
 
 export async function addMusicAction(
@@ -20,7 +21,5 @@ export async function addMusicAction(
     return { success: false, message: result.error.issues[0].message }
   }
 
-  await addMusic({ ...result.data })
-
-  return { success: true, message: "Música Adicionada!" }
+  return await addMusic({ ...result.data })
 }

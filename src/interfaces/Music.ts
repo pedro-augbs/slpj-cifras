@@ -1,5 +1,5 @@
 interface Music {
-  id?: number
+  id?: string
   name: string
   slug?: string
   artist?: string

@@ -1,20 +1,25 @@
 "use client"
 
+import { motion } from "framer-motion"
 import { Settings, X } from "lucide-react"
+import { useSession } from "next-auth/react"
+import { useState } from "react"
 
-import { AddMusicButton } from "@/components/add-music-button"
-import { ModeToggle } from "@/components/mode-toggle"
+import { AddMusic } from "@/components/buttons/add-music"
+import { Logout } from "@/components/buttons/logout"
+import { ModeToggle } from "@/components/buttons/mode-toggle"
 
+import { Button } from "@/components/ui/button"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-import { Button } from "@/components/ui/button"
-import { useState } from "react"
 
-export function ConfigButton() {
+export function Config() {
   const [isOpen, setIsOpen] = useState(false)
+  const { data: session } = useSession()
+  const isAdmin = session?.user.role === "admin"
 
   return (
     <Collapsible
@@ -36,9 +41,18 @@ export function ConfigButton() {
           />
         </Button>
       </CollapsibleTrigger>
-      <CollapsibleContent className="absolute bottom-16 flex flex-col gap-2">
-        <ModeToggle />
-        <AddMusicButton />
+      <CollapsibleContent forceMount asChild>
+        <motion.div
+          key={String(isOpen)}
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}
+          className="data-[state=closed]:hidden absolute bottom-16 flex flex-col gap-2"
+        >
+          <ModeToggle />
+          <Logout />
+          {isAdmin && <AddMusic />}
+        </motion.div>
       </CollapsibleContent>
     </Collapsible>
   )

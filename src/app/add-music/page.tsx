@@ -2,8 +2,8 @@
 
 import { notFound } from "next/navigation"
 
-import { useMusicStore } from "@/store/music-store"
 import { AddMusicForm } from "@/components/forms/add-music-form"
+import { useMusicStore } from "@/store/music-store"
 
 export default function AddMusicPage() {
   const { music } = useMusicStore()

@@ -5,8 +5,8 @@ export async function addMusic({
   bpm,
   key,
   letter,
-}: Music): Promise<void> {
-  const response = await fetch("/api/add-music", {
+}: Music): Promise<{ success: boolean; message: string }> {
+  const response = await fetch("/api/music/add", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -22,6 +22,15 @@ export async function addMusic({
   })
 
   if (!response.ok) {
-    throw new Error("Error while adding a music!")
+    if (response.status === 405) {
+      return { success: false, message: "Método não permitido!" }
+    }
+    if (response.status === 401) {
+      return { success: false, message: "Não Autorizado!" }
+    }
+
+    return { success: false, message: "Erro Interno do Servidor!" }
   }
+
+  return { success: true, message: "Música adicionada com sucesso!" }
 }

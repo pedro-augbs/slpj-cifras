@@ -1,4 +1,4 @@
-export const notas = [
+export const notes = [
   "A",
   "A#",
   "B",
@@ -13,41 +13,65 @@ export const notas = [
   "G#",
 ]
 
-function transporNota(nota: string, semitons: number): string {
-  const index = notas.indexOf(nota)
-  if (index === -1) return nota // Retorna a nota original se não encontrada
+export function transposeCipher(
+  cipher: string,
+  semitons: number,
+  originalIndex: number,
+): string {
+  const regex = /\[([^\]]+)\]/g
 
-  const novoIndex = (index + semitons + notas.length) % notas.length
-  return notas[novoIndex]
+  // /\b([A-G][#b]?((m|M)?(7|maj7|sus4|dim|9\(\d+(\/\d+)?\)|\d+\(\d+(\/\d+)?\))?)\/?[A-G]?[#b]?)(?=\s|$)/g
+
+  return (cipher || "").replace(regex, (_, chord) => {
+    const transposed = transposeChord(chord, semitons, originalIndex)
+    return transposed
+  })
 }
 
-function transporAcorde(acorde: string, semitons: number): string {
-  const parts = acorde.split("/")
-  const notaPrincipal = parts[0].match(/[A-G][#b]?/g)?.[0] // Captura a nota principal
-  const resto = parts[0].replace(notaPrincipal || "", "") // Captura o resto do acorde
+function transposeChord(
+  chord: string,
+  semitons: number,
+  originalIndex: number,
+): string {
+  const chordRegex =
+    /^\s*([A-G][#b]?)(m|min)?(7|maj7|sus4|dim|9\(\d+(\/\d+)?\)|\d+\(\d+(\/\d+)?\))?\/?([A-G][#b]?)?\s*$/
+
+  const parts = chord.split("/")
+
+  if (!chordRegex.test(parts[0])) {
+    if (chord.length > 1) {
+      return `[${chord}]`
+    }
+    return chord
+  }
+  const notePrincipal = parts[0].match(/[A-G][#b]?/g)?.[0] // Captura a note principal
+  const resto = parts[0].replace(notePrincipal || "", "") // Captura o resto do acorde
 
   // Manter o símbolo de menor (m)
   const isMenor = resto.includes("m") || resto.includes("min") ? "m" : ""
 
-  const novoAcorde =
-    transporNota(notaPrincipal || "", semitons) +
+  const newChord =
+    transposeNote(notePrincipal || "", semitons, originalIndex) +
     isMenor +
     resto.replace(/m|min/, "") // Remove 'm' ou 'min' da parte do acorde, se existir
 
   if (parts.length > 1) {
     const baixo = parts[1]
-    return `${novoAcorde}/${transporNota(baixo, semitons)}`
+    return `<span class="text-primary">${newChord}/${transposeNote(baixo, semitons, originalIndex)}</span>`
   }
 
-  return novoAcorde
+  return `<span class="text-primary">${newChord}</span>`
 }
 
-export function transporCifra(cifra: string, semitons: number): string {
-  const regex =
-    /\b([A-G][#b]?((m|M)?(7|maj7|sus4|dim|9\(\d+(\/\d+)?\)|\d+\(\d+(\/\d+)?\))?)\/?[A-G]?[#b]?)(?=\s|$)/g
+function transposeNote(
+  note: string,
+  semitons: number,
+  originalIndex: number,
+): string {
+  const index = notes.indexOf(note)
+  if (index === -1) return note // Retorna a note original se não encontrada
 
-  return cifra.replace(regex, match => {
-    const transposto = transporAcorde(match, semitons)
-    return `<span class="text-primary">${transposto}</span>`
-  })
+  const newIndex =
+    (index - originalIndex + semitons + notes.length) % notes.length
+  return notes[newIndex]
 }

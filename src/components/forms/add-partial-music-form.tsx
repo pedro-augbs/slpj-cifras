@@ -1,37 +1,49 @@
 "use client"
 
-import { useActionState } from "react"
-
-import { validatePartialMusicAction } from "@/actions/validate-partial-music-action"
+import { redirect } from "next/navigation"
+import { toast } from "sonner"
+import { z } from "zod"
 
 import { useMusicStore } from "@/store/music-store"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { toast } from "sonner"
-import { redirect } from "next/navigation"
+import { useState } from "react"
+
+const schema = z.object({
+  name: z.string().min(1, "Campo nome não pode ser vazio!"),
+  artist: z.string(),
+  author: z.string(),
+  bpm: z.coerce.number(),
+})
 
 export function AddPartialMusicForm() {
+  const [loading, setLoading] = useState(false)
   const { music, saveInput } = useMusicStore()
-
-  const [result, action, isPending] = useActionState(
-    validatePartialMusicAction,
-    null,
-  )
 
   function handleChange(input: HTMLInputElement) {
     const data = { [input.name]: input.value }
     saveInput(data)
   }
 
-  if (result?.success) {
-    toast.success(result?.message)
-    redirect("/add-music")
+  function handleSubmit(data: FormData) {
+    setLoading(true)
+
+    const result = schema.safeParse(Object.fromEntries(data))
+
+    if (result.success) {
+      toast.success("Informações adicionadas!")
+      redirect("/add-music")
+    } else {
+      toast.error(result.error.issues[0].message)
+    }
+
+    setLoading(false)
   }
 
   return (
-    <form action={action} className="flex flex-col gap-2 text-left">
+    <form action={handleSubmit} className="flex flex-col gap-2 py-2">
       <div>
         <Label htmlFor="name">Nome</Label>
         <Input
@@ -78,8 +90,7 @@ export function AddPartialMusicForm() {
           required
         />
       </div>
-      {!result?.success && <span>{result?.message}</span>}
-      <Button type="submit" disabled={isPending}>
+      <Button type="submit" disabled={loading}>
         Continue
       </Button>
     </form>

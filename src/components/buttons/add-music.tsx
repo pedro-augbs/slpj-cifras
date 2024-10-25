@@ -1,5 +1,8 @@
 import { Plus } from "lucide-react"
 
+import { AddPartialMusicForm } from "@/components/forms/add-partial-music-form"
+
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -8,10 +11,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { AddPartialMusicForm } from "./forms/add-partial-music-form"
 
-export function AddMusicButton() {
+export function AddMusic() {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -22,9 +23,10 @@ export function AddMusicButton() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Music</DialogTitle>
-          <DialogDescription asChild>
-            <AddPartialMusicForm />
+          <DialogDescription className="sr-only">
+            Form to add music
           </DialogDescription>
+          <AddPartialMusicForm />
         </DialogHeader>
       </DialogContent>
     </Dialog>

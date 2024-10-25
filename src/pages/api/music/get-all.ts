@@ -10,19 +10,30 @@ export default async function handler(
     return res.status(405).json({ message: "Method Not Allowed" })
   }
 
+  const { search } = req.query
+
   try {
     const musics = await prisma.music.findMany({
       where: {
-        artist: {
-          not: "SLPJ Music",
-        },
+        OR: [
+          {
+            name: {
+              contains: search?.toString() || "",
+            },
+          },
+          {
+            letter: {
+              contains: search?.toString() || "",
+            },
+          },
+        ],
       },
       orderBy: {
         name: "asc",
       },
     })
 
-    return res.status(200).json({ musics })
+    return res.status(200).json(musics)
   } catch (err) {
     console.error(err)
     return res.status(500).json({ message: "Failed to load data", error: err })

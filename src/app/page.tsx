@@ -1,83 +1,52 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { Search } from "lucide-react"
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { Suspense, useState } from "react"
+import { useDebounce } from "use-debounce"
 
-import { getAllMusics } from "@/api/get-all-musics"
+import { api } from "@/lib/axios"
+
+import { Card } from "@/components/card"
+import { Header } from "@/components/header"
+
+import { Config } from "@/components/buttons/config"
 
 import { CardSkeleton } from "@/components/skeletons/card-skeleton"
 
-import { Card } from "@/components/card"
-import { ConfigButton } from "@/components/config-button"
-
-import { Input } from "@/components/ui/input"
-
 export default function Home() {
-  const [data, setData] = useState<Music[]>([])
   const [search, setSearch] = useState("")
+  const [value] = useDebounce(search, 500)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getAllMusics()
-      setData(data.musics)
-    }
-    fetchData()
-  }, [])
-
-  const filteredData = data.filter(music => {
-    return (
-      music.name
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .includes(
-          search
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .trim(),
-        ) ||
-      music.letter
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .includes(
-          search
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .trim(),
-        )
-    )
+  const { data } = useSuspenseQuery({
+    queryKey: ["music", value],
+    queryFn: async (): Promise<Music[]> => {
+      return await api
+        .get("/api/music/get-all", { params: { search: value } })
+        .then(res => res.data)
+    },
   })
 
   return (
     <>
-      <header className="flex items-center justify-center py-4 px-4">
-        <div className="flex items-center relative gap-2 w-full max-w-md">
-          <Search className="absolute left-2" />
-          <Input
-            type="search"
-            placeholder="Search"
-            className="pl-10"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
-        </div>
-      </header>
+      <Header search={search} setSearch={setSearch} />
       <div className="flex flex-wrap justify-center gap-4 px-4 py-2">
-        {filteredData.map(music => {
-          return (
-            <Card
-              key={music.id}
-              name={music.name}
-              bpm={music.bpm}
-              slug={music.slug}
-            />
-          )
-        })}
+        <Suspense fallback={<CardSkeleton />}>
+          {data.length > 0 ? (
+            data.map(music => (
+              <Card
+                key={music.id}
+                name={music.name}
+                artist={music.artist}
+                bpm={music.bpm}
+                slug={music.slug}
+              />
+            ))
+          ) : (
+            <p>Nenhuma música encontrada!</p>
+          )}
+        </Suspense>
       </div>
-      <ConfigButton />
+      <Config />
     </>
   )
 }
