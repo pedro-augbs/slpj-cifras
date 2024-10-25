@@ -2,7 +2,6 @@ import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
 import { prisma } from "@/lib/prisma"
-import { env } from "@/utils/env"
 
 import { comparePassword } from "@/utils/functions/password-functions"
 
@@ -37,7 +36,7 @@ export default NextAuth({
     strategy: "jwt",
   },
   jwt: {
-    secret: env.JWT_PASS,
+    secret: process.env.JWT_PASS,
   },
   pages: {
     signIn: "/login",

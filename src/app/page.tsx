@@ -1,6 +1,6 @@
 "use client"
 
-import { useSuspenseQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { Suspense, useState } from "react"
 import { useDebounce } from "use-debounce"
 
@@ -17,7 +17,7 @@ export default function Home() {
   const [search, setSearch] = useState("")
   const [value] = useDebounce(search, 500)
 
-  const { data } = useSuspenseQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["music", value],
     queryFn: async (): Promise<Music[]> => {
       return await api
@@ -26,25 +26,41 @@ export default function Home() {
     },
   })
 
+  if (!data) {
+    return <div>not found</div>
+  }
+
+  if (isError) {
+    return <div>Ocorreu um erro ao buscar as músicas.</div>
+  }
+
   return (
     <>
       <Header search={search} setSearch={setSearch} />
       <div className="flex flex-wrap justify-center gap-4 px-4 py-2">
-        <Suspense fallback={<CardSkeleton />}>
-          {data.length > 0 ? (
-            data.map(music => (
-              <Card
-                key={music.id}
-                name={music.name}
-                artist={music.artist}
-                bpm={music.bpm}
-                slug={music.slug}
-              />
-            ))
-          ) : (
-            <p>Nenhuma música encontrada!</p>
-          )}
-        </Suspense>
+        {isLoading && (
+          <>
+            <CardSkeleton />
+            <CardSkeleton />
+            <CardSkeleton />
+            <CardSkeleton />
+            <CardSkeleton />
+            <CardSkeleton />
+          </>
+        )}
+        {data.length > 0 ? (
+          data.map(music => (
+            <Card
+              key={music.id}
+              name={music.name}
+              artist={music.artist}
+              bpm={music.bpm}
+              slug={music.slug}
+            />
+          ))
+        ) : (
+          <p>Nenhuma música encontrada!</p>
+        )}
       </div>
       <Config />
     </>

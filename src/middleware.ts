@@ -2,9 +2,7 @@ import { getToken } from "next-auth/jwt"
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
-import { env } from "@/utils/env"
-
-const secret = env.JWT_PASS
+const secret = process.env.JWT_PASS
 
 export default async function middleware(req: NextRequest) {
   if (process.env.NODE_ENV === "production" && !req.url.includes("/_next")) {

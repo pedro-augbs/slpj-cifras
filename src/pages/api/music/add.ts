@@ -1,12 +1,10 @@
-import jwt from "jsonwebtoken"
 import type { NextApiRequest, NextApiResponse } from "next"
+import { getToken } from "next-auth/jwt"
 import { z } from "zod"
 
 import { prisma } from "@/lib/prisma"
 
-import { env } from "@/utils/env"
 import { formatStringToSlug } from "@/utils/functions/format-string"
-import { getToken } from "next-auth/jwt"
 
 const bodySchema = z.object({
   name: z.string().min(1, "Required!"),
@@ -26,7 +24,7 @@ export default async function handler(
   }
 
   try {
-    const token = await getToken({ req, secret: env.JWT_PASS })
+    const token = await getToken({ req, secret: process.env.JWT_PASS })
 
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" })
