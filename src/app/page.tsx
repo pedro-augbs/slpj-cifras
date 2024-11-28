@@ -12,6 +12,7 @@ import { Header } from "@/components/header"
 import { Config } from "@/components/buttons/config"
 
 import { CardSkeleton } from "@/components/skeletons/card-skeleton"
+import { Loading } from "@/components/loading"
 
 export default function Home() {
   const [search, setSearch] = useState("")
@@ -26,8 +27,12 @@ export default function Home() {
     },
   })
 
+  if (!data && isLoading) {
+    return <Loading />
+  }
+
   if (!data) {
-    return <div>not found</div>
+    return null
   }
 
   if (isError) {
